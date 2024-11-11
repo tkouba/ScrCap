@@ -49,6 +49,7 @@
             this.ClientSize = new System.Drawing.Size(546, 352);
             this.Controls.Add(this.picture);
             this.Name = "FormImage";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormImage_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();
             this.ResumeLayout(false);
 
