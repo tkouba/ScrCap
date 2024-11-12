@@ -43,16 +43,19 @@ namespace ScrCap
 
         private void FormImage_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string msg = String.Format("Captured image {0} unsaved. Save?", Text);
-            DialogResult res = MessageBox.Show(this, msg, "Confirmation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2);
-            if (res == DialogResult.Yes)
+            if (!saved)
             {
-                SaveImage();
-            }
-            if (res == DialogResult.Cancel)
-            {
-                e.Cancel = true;
+                string msg = String.Format("Captured image {0} unsaved. Save?", Text);
+                DialogResult res = MessageBox.Show(this, msg, "Confirmation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+                if (res == DialogResult.Yes)
+                {
+                    SaveImage();
+                }
+                if (res == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
             }
         }
     }
