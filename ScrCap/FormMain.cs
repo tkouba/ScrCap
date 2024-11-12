@@ -17,7 +17,17 @@ namespace ScrCap
     public partial class FormMain : Form
     {
 
+        public class DeviceDataWrapper
+        {
+            public DeviceData Device { get; set; }
+            public string Name => Device.Name;
+            public string Serial => Device.Serial;
+            public DeviceDataWrapper(DeviceData device) => Device = device;
+            public override string ToString() => $"{Device.Name} - {Device.Serial}";
+        }
+
         System.Threading.Timer timer;
+        List<DeviceDataWrapper> devices = new List<DeviceDataWrapper>();
         AdbClient adbClient;
 
         public FormMain()
@@ -37,6 +47,61 @@ namespace ScrCap
                 menuItemClose.Enabled =
                 toolStripButtonSave.Enabled =
                 MdiChildren.Length > 0;
+        }
+
+        void UpdateDeviceList(IEnumerable<DeviceData> iEnumerable)
+        {
+            try
+            {
+                timerRefresh.Stop();
+                bool refresh = false;
+                string sn = (toolStripComboDevices.SelectedItem as DeviceDataWrapper)?.Serial;
+                foreach (DeviceData device in iEnumerable)
+                {
+                    if (!devices.Any(o => o.Serial == device.Serial))
+                    {
+                        devices.Add(new DeviceDataWrapper(device));
+                        refresh = true;
+                    }
+                    else
+                        devices.First(o => o.Serial == device.Serial).Device = device;
+                }
+                List<DeviceDataWrapper> toDel = new List<DeviceDataWrapper>();
+                foreach (DeviceDataWrapper device in devices)
+                {
+                    if (!iEnumerable.Any(o => o.Serial == device.Serial))
+                        toDel.Add(devices.First(o => o.Serial == device.Serial));
+                }
+                foreach (DeviceDataWrapper device in toDel)
+                {
+                    devices.Remove(device);
+                    refresh = true;
+                }
+                if (refresh)
+                {
+                    toolStripComboDevices.Items.Clear();
+                    toolStripComboDevices.Items.AddRange(devices.ToArray());
+                    if (!String.IsNullOrEmpty(sn))
+                    {
+                        toolStripComboDevices.SelectedItem = devices.FirstOrDefault(o => o.Serial == sn) ?? devices.FirstOrDefault();
+                    }
+                    if (toolStripComboDevices.SelectedItem == null)
+                    {
+                        toolStripComboDevices.SelectedItem = devices.FirstOrDefault();
+                    }
+                    toolStripButtonCapture.Enabled =
+                        menuItemCapture.Enabled =
+                            toolStripComboDevices.SelectedItem != null;
+                }
+            }
+            catch (Exception ex)
+            {
+                statusLabel.Text = ex.Message;
+            }
+            finally
+            {
+                timerRefresh.Start();
+            }
         }
 
         private async void FormMain_Load(object sender, EventArgs e)
@@ -87,6 +152,7 @@ namespace ScrCap
                     statusLabel.Text = String.Format("Version {0} of the adb daemon is running.", status.Version);
                     adbClient = new AdbClient();
                     adbClient.Connect("127.0.0.1");
+                    UpdateDeviceList(await adbClient.GetDevicesAsync());
                 }
                 else
                 {
@@ -101,43 +167,46 @@ namespace ScrCap
 
         async Task CaptureScreen()
         {
-            try
+            if (toolStripComboDevices.SelectedItem != null)
             {
-                this.Cursor = Cursors.WaitCursor;
-                DeviceData deviceData = adbClient.GetDevices().FirstOrDefault(); // Get first connected device
-                if (deviceData.State == DeviceState.Online)
+                try
                 {
-                    using (Framebuffer framebuffer = await adbClient.GetFrameBufferAsync(deviceData, CancellationToken.None))
+                    this.Cursor = Cursors.WaitCursor;
+                    DeviceData deviceData = ((DeviceDataWrapper)toolStripComboDevices.SelectedItem).Device;
+                    if (deviceData.State == DeviceState.Online)
                     {
-                        if (framebuffer != null)
+                        using (Framebuffer framebuffer = await adbClient.GetFrameBufferAsync(deviceData, CancellationToken.None))
                         {
-                            Image image = framebuffer.ToImage();
-                            FormImage childForm = new FormImage();
-                            childForm.SetImage(image);
-                            childForm.MdiParent = this;
-                            childForm.FormClosed += ChildForm_FormClosed;
-                            childForm.Text = $"{deviceData.Name}-{DateTime.Now:yyyyMMdd-HHmmss}";
-                            childForm.Show();
-                            statusLabel.Text = String.Format("Image captured from {0} at {1}", deviceData.Name, DateTime.Now);
-                        }
-                        else
-                        {
-                            statusLabel.Text = "Can't capture screen.";
+                            if (framebuffer != null)
+                            {
+                                Image image = framebuffer.ToImage();
+                                FormImage childForm = new FormImage();
+                                childForm.SetImage(image);
+                                childForm.MdiParent = this;
+                                childForm.FormClosed += ChildForm_FormClosed;
+                                childForm.Text = $"{deviceData.Name}-{DateTime.Now:yyyyMMdd-HHmmss}";
+                                childForm.Show();
+                                statusLabel.Text = String.Format("Image captured from {0} at {1}", deviceData.Name, DateTime.Now);
+                            }
+                            else
+                            {
+                                statusLabel.Text = "Can't capture screen.";
+                            }
                         }
                     }
+                    else
+                    {
+                        statusLabel.Text = String.Format("Device state {0}, can't continue.", deviceData.State);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    statusLabel.Text = String.Format("Device state {0}, can't continue.", deviceData.State);
+                    statusLabel.Text = ex.Message;
                 }
-            }
-            catch (Exception ex)
-            {
-                statusLabel.Text = ex.Message;
-            }
-            finally
-            {
-                this.Cursor = Cursors.Default;
+                finally
+                {
+                    this.Cursor = Cursors.Default;
+                }
             }
         }
 
@@ -220,6 +289,12 @@ namespace ScrCap
             {
                 (MdiChildren[0] as FormImage)?.SaveImage();
             }
+        }
+
+        private async void timerRefresh_Tick(object sender, EventArgs e)
+        {
+            if (adbClient != null)
+                UpdateDeviceList(await adbClient.GetDevicesAsync());
         }
     }
 }
