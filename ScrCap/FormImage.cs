@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace ScrCap
 {
     public partial class FormImage : Form
     {
+        private static string lastFolder = String.Empty;
+
         bool saved = false;
 
         public FormImage()
@@ -27,16 +30,24 @@ namespace ScrCap
 
         public void SaveImage()
         {
+            if (String.IsNullOrEmpty(lastFolder))
+                lastFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            saveFileDialog.Filter = "Bitmap Files (*.bmp)|*.bmp|All Files (*.*)|*.*";
-            saveFileDialog.DefaultExt = "bmp";
-            saveFileDialog.FileName = $"{Text}.bmp";
+            saveFileDialog.InitialDirectory = lastFolder;
+            saveFileDialog.Filter = "Portable Network Graphics (*.png)|*.png|Bitmap Files (*.bmp)|*.bmp|All Files (*.*)|*.*";
+            saveFileDialog.DefaultExt = "png";
+            saveFileDialog.FileName = Text;
+            saveFileDialog.AddExtension = true;
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = saveFileDialog.FileName;
-                picture.Image.Save(fileName);
+                string ext = Path.GetExtension(fileName);
+                ImageFormat fmt = ImageFormat.Png;
+                if (String.Equals(".bmp", ext, StringComparison.OrdinalIgnoreCase))
+                    fmt = ImageFormat.Bmp;
+                picture.Image.Save(fileName, fmt);
                 Text = Path.GetFileName(fileName);
+                lastFolder = Path.GetDirectoryName(fileName);
                 saved = true;
             }
         }
