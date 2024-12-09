@@ -51,6 +51,8 @@
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.timerRefresh = new System.Windows.Forms.Timer(this.components);
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.statusBar.SuspendLayout();
@@ -60,6 +62,7 @@
             // 
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemFile,
+            this.editToolStripMenuItem,
             this.windowsToolStripMenuItem});
             this.menuMain.Location = new System.Drawing.Point(0, 0);
             this.menuMain.Name = "menuMain";
@@ -131,35 +134,35 @@
             // menuItemCascade
             // 
             this.menuItemCascade.Name = "menuItemCascade";
-            this.menuItemCascade.Size = new System.Drawing.Size(150, 22);
+            this.menuItemCascade.Size = new System.Drawing.Size(180, 22);
             this.menuItemCascade.Text = "&Cascade";
             this.menuItemCascade.Click += new System.EventHandler(this.menuItemCascade_Click);
             // 
             // menuItemTileVert
             // 
             this.menuItemTileVert.Name = "menuItemTileVert";
-            this.menuItemTileVert.Size = new System.Drawing.Size(150, 22);
+            this.menuItemTileVert.Size = new System.Drawing.Size(180, 22);
             this.menuItemTileVert.Text = "Tile &Vertical";
             this.menuItemTileVert.Click += new System.EventHandler(this.menuItemTileVert_Click);
             // 
             // menuItemTileHorz
             // 
             this.menuItemTileHorz.Name = "menuItemTileHorz";
-            this.menuItemTileHorz.Size = new System.Drawing.Size(150, 22);
+            this.menuItemTileHorz.Size = new System.Drawing.Size(180, 22);
             this.menuItemTileHorz.Text = "Tile &Horizontal";
             this.menuItemTileHorz.Click += new System.EventHandler(this.menuItemTileHorz_Click);
             // 
             // menuItemArrangeIcons
             // 
             this.menuItemArrangeIcons.Name = "menuItemArrangeIcons";
-            this.menuItemArrangeIcons.Size = new System.Drawing.Size(150, 22);
+            this.menuItemArrangeIcons.Size = new System.Drawing.Size(180, 22);
             this.menuItemArrangeIcons.Text = "&Arrange Icons";
             this.menuItemArrangeIcons.Click += new System.EventHandler(this.menuItemArrangeIcons_Click);
             // 
             // menuItemCloseAll
             // 
             this.menuItemCloseAll.Name = "menuItemCloseAll";
-            this.menuItemCloseAll.Size = new System.Drawing.Size(150, 22);
+            this.menuItemCloseAll.Size = new System.Drawing.Size(180, 22);
             this.menuItemCloseAll.Text = "C&lose all";
             this.menuItemCloseAll.Click += new System.EventHandler(this.menuItemCloseAll_Click);
             // 
@@ -223,6 +226,23 @@
             // 
             this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemCopy});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "&Edit";
+            // 
+            // menuItemCopy
+            // 
+            this.menuItemCopy.Enabled = false;
+            this.menuItemCopy.Name = "menuItemCopy";
+            this.menuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.menuItemCopy.Size = new System.Drawing.Size(180, 22);
+            this.menuItemCopy.Text = "&Copy";
+            this.menuItemCopy.Click += new System.EventHandler(this.menuItemCopy_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -270,6 +290,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonSave;
         private System.Windows.Forms.ToolStripComboBox toolStripComboDevices;
         private System.Windows.Forms.Timer timerRefresh;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuItemCopy;
     }
 }
 

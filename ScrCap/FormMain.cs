@@ -46,6 +46,7 @@ namespace ScrCap
             menuItemSave.Enabled =
                 menuItemClose.Enabled =
                 toolStripButtonSave.Enabled =
+                menuItemCopy.Enabled =
                 MdiChildren.Length > 0;
         }
 
@@ -295,6 +296,14 @@ namespace ScrCap
         {
             if (adbClient != null)
                 UpdateDeviceList(await adbClient.GetDevicesAsync());
+        }
+
+        private void menuItemCopy_Click(object sender, EventArgs e)
+        {
+            if (MdiChildren.Length > 0)
+            {
+                (MdiChildren[0] as FormImage)?.CopyImageToClipboard();
+            }
         }
     }
 }

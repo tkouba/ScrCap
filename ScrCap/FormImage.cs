@@ -52,6 +52,11 @@ namespace ScrCap
             }
         }
 
+        public void CopyImageToClipboard()
+        {
+            Clipboard.SetImage(picture.Image);
+        }
+
         private void FormImage_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!saved)
