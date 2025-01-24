@@ -15,7 +15,6 @@
         {
             if (disposing)
             {
-                timer?.Dispose();
                 components?.Dispose();
             }
             base.Dispose(disposing);
@@ -30,14 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuMain = new System.Windows.Forms.MenuStrip();
             this.menuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemCapture = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemCascade = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemTileVert = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,13 +43,11 @@
             this.menuItemCloseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolBar = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonCapture = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripComboDevices = new System.Windows.Forms.ToolStripComboBox();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.timerRefresh = new System.Windows.Forms.Timer(this.components);
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.statusBar.SuspendLayout();
@@ -73,39 +68,22 @@
             // 
             this.menuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemCapture,
-            this.menuItemSave,
-            this.menuItemClose,
             this.toolStripMenuItem1,
             this.menuItemExit});
+            this.menuItemFile.MergeIndex = 0;
             this.menuItemFile.Name = "menuItemFile";
             this.menuItemFile.Size = new System.Drawing.Size(37, 20);
             this.menuItemFile.Text = "&File";
             // 
             // menuItemCapture
             // 
+            this.menuItemCapture.Image = global::ScrCap.Properties.Resources.menuItemImageNew;
+            this.menuItemCapture.MergeIndex = 0;
             this.menuItemCapture.Name = "menuItemCapture";
             this.menuItemCapture.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.menuItemCapture.Size = new System.Drawing.Size(186, 22);
             this.menuItemCapture.Text = "&New Capture";
             this.menuItemCapture.Click += new System.EventHandler(this.menuItemCapture_Click);
-            // 
-            // menuItemSave
-            // 
-            this.menuItemSave.Enabled = false;
-            this.menuItemSave.Name = "menuItemSave";
-            this.menuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.menuItemSave.Size = new System.Drawing.Size(186, 22);
-            this.menuItemSave.Text = "&Save";
-            this.menuItemSave.Click += new System.EventHandler(this.menuItemSave_Click);
-            // 
-            // menuItemClose
-            // 
-            this.menuItemClose.Enabled = false;
-            this.menuItemClose.Name = "menuItemClose";
-            this.menuItemClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.menuItemClose.Size = new System.Drawing.Size(186, 22);
-            this.menuItemClose.Text = "Clos&e";
-            this.menuItemClose.Click += new System.EventHandler(this.menuItemClose_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -114,10 +92,18 @@
             // 
             // menuItemExit
             // 
+            this.menuItemExit.MergeIndex = 99;
             this.menuItemExit.Name = "menuItemExit";
             this.menuItemExit.Size = new System.Drawing.Size(186, 22);
             this.menuItemExit.Text = "E&xit";
             this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.MergeIndex = 1;
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "&Edit";
             // 
             // windowsToolStripMenuItem
             // 
@@ -127,42 +113,48 @@
             this.menuItemTileHorz,
             this.menuItemArrangeIcons,
             this.menuItemCloseAll});
+            this.windowsToolStripMenuItem.MergeIndex = 2;
             this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
             this.windowsToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.windowsToolStripMenuItem.Text = "&Windows";
             // 
             // menuItemCascade
             // 
+            this.menuItemCascade.Enabled = false;
             this.menuItemCascade.Name = "menuItemCascade";
-            this.menuItemCascade.Size = new System.Drawing.Size(180, 22);
+            this.menuItemCascade.Size = new System.Drawing.Size(150, 22);
             this.menuItemCascade.Text = "&Cascade";
             this.menuItemCascade.Click += new System.EventHandler(this.menuItemCascade_Click);
             // 
             // menuItemTileVert
             // 
+            this.menuItemTileVert.Enabled = false;
             this.menuItemTileVert.Name = "menuItemTileVert";
-            this.menuItemTileVert.Size = new System.Drawing.Size(180, 22);
+            this.menuItemTileVert.Size = new System.Drawing.Size(150, 22);
             this.menuItemTileVert.Text = "Tile &Vertical";
             this.menuItemTileVert.Click += new System.EventHandler(this.menuItemTileVert_Click);
             // 
             // menuItemTileHorz
             // 
+            this.menuItemTileHorz.Enabled = false;
             this.menuItemTileHorz.Name = "menuItemTileHorz";
-            this.menuItemTileHorz.Size = new System.Drawing.Size(180, 22);
+            this.menuItemTileHorz.Size = new System.Drawing.Size(150, 22);
             this.menuItemTileHorz.Text = "Tile &Horizontal";
             this.menuItemTileHorz.Click += new System.EventHandler(this.menuItemTileHorz_Click);
             // 
             // menuItemArrangeIcons
             // 
+            this.menuItemArrangeIcons.Enabled = false;
             this.menuItemArrangeIcons.Name = "menuItemArrangeIcons";
-            this.menuItemArrangeIcons.Size = new System.Drawing.Size(180, 22);
+            this.menuItemArrangeIcons.Size = new System.Drawing.Size(150, 22);
             this.menuItemArrangeIcons.Text = "&Arrange Icons";
             this.menuItemArrangeIcons.Click += new System.EventHandler(this.menuItemArrangeIcons_Click);
             // 
             // menuItemCloseAll
             // 
+            this.menuItemCloseAll.Enabled = false;
             this.menuItemCloseAll.Name = "menuItemCloseAll";
-            this.menuItemCloseAll.Size = new System.Drawing.Size(180, 22);
+            this.menuItemCloseAll.Size = new System.Drawing.Size(150, 22);
             this.menuItemCloseAll.Text = "C&lose all";
             this.menuItemCloseAll.Click += new System.EventHandler(this.menuItemCloseAll_Click);
             // 
@@ -170,7 +162,7 @@
             // 
             this.toolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonCapture,
-            this.toolStripButtonSave,
+            this.toolStripSeparator1,
             this.toolStripComboDevices});
             this.toolBar.Location = new System.Drawing.Point(0, 24);
             this.toolBar.Name = "toolBar";
@@ -181,27 +173,24 @@
             // toolStripButtonCapture
             // 
             this.toolStripButtonCapture.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonCapture.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonCapture.Image")));
+            this.toolStripButtonCapture.Image = global::ScrCap.Properties.Resources.menuItemImageNew;
             this.toolStripButtonCapture.ImageTransparentColor = System.Drawing.Color.Black;
+            this.toolStripButtonCapture.MergeIndex = 0;
             this.toolStripButtonCapture.Name = "toolStripButtonCapture";
             this.toolStripButtonCapture.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonCapture.Text = "New";
             this.toolStripButtonCapture.Click += new System.EventHandler(this.toolStripButtonCapture_Click);
             // 
-            // toolStripButtonSave
+            // toolStripSeparator1
             // 
-            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSave.Enabled = false;
-            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
-            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Black;
-            this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonSave.Text = "Save";
-            this.toolStripButtonSave.Click += new System.EventHandler(this.toolStripButtonSave_Click);
+            this.toolStripSeparator1.MergeIndex = 10;
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripComboDevices
             // 
             this.toolStripComboDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboDevices.MergeIndex = 11;
             this.toolStripComboDevices.Name = "toolStripComboDevices";
             this.toolStripComboDevices.Size = new System.Drawing.Size(160, 25);
             // 
@@ -226,23 +215,6 @@
             // 
             this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
             // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItemCopy});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "&Edit";
-            // 
-            // menuItemCopy
-            // 
-            this.menuItemCopy.Enabled = false;
-            this.menuItemCopy.Name = "menuItemCopy";
-            this.menuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.menuItemCopy.Size = new System.Drawing.Size(180, 22);
-            this.menuItemCopy.Text = "&Copy";
-            this.menuItemCopy.Click += new System.EventHandler(this.menuItemCopy_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,7 +228,6 @@
             this.Name = "FormMain";
             this.Text = "Screen capture for Android devices";
             this.Load += new System.EventHandler(this.FormMain_Load);
-            this.MdiChildActivate += new System.EventHandler(this.FormMain_MdiChildActivate);
             this.menuMain.ResumeLayout(false);
             this.menuMain.PerformLayout();
             this.toolBar.ResumeLayout(false);
@@ -284,14 +255,11 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemTileHorz;
         private System.Windows.Forms.ToolStripMenuItem menuItemCloseAll;
         private System.Windows.Forms.ToolStripMenuItem menuItemArrangeIcons;
-        private System.Windows.Forms.ToolStripMenuItem menuItemSave;
-        private System.Windows.Forms.ToolStripMenuItem menuItemClose;
         private System.Windows.Forms.ToolStripButton toolStripButtonCapture;
-        private System.Windows.Forms.ToolStripButton toolStripButtonSave;
         private System.Windows.Forms.ToolStripComboBox toolStripComboDevices;
         private System.Windows.Forms.Timer timerRefresh;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem menuItemCopy;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

@@ -12,11 +12,13 @@ using System.Windows.Forms;
 
 namespace ScrCap
 {
-    public partial class FormImage : Form
+    public partial class FormImage : Form, IChildForm
     {
         private static string lastFolder = String.Empty;
 
         bool saved = false;
+
+        public ToolStrip ToolBarStrip => toolStrip;
 
         public FormImage()
         {
@@ -73,6 +75,31 @@ namespace ScrCap
                     e.Cancel = true;
                 }
             }
+        }
+
+        private void menuItemSave_Click(object sender, EventArgs e)
+        {
+            SaveImage();
+        }
+
+        private void menuItemClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void menuItemCopy_Click(object sender, EventArgs e)
+        {
+            CopyImageToClipboard();
+        }
+
+        private void toolStripButtonSave_Click(object sender, EventArgs e)
+        {
+            SaveImage();
+        }
+
+        private void toolStripButtonCopy_Click(object sender, EventArgs e)
+        {
+            CopyImageToClipboard();
         }
     }
 }

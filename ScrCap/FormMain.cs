@@ -26,28 +26,33 @@ namespace ScrCap
             public override string ToString() => $"{Device.Name} - {Device.Serial}";
         }
 
-        System.Threading.Timer timer;
         List<DeviceDataWrapper> devices = new List<DeviceDataWrapper>();
         AdbClient adbClient;
 
         public FormMain()
         {
             InitializeComponent();
-            timer = new System.Threading.Timer(WinClosedCallback, null, Timeout.Infinite, Timeout.Infinite);
         }
 
-        void WinClosedCallback(object state)
+        protected override void OnMdiChildActivate(EventArgs e)
         {
-            BeginInvoke((Action)(() => RefreshMenu()));
+            base.OnMdiChildActivate(e);
+            RefreshMenu();
+            ToolStripManager.RevertMerge(toolBar);
+            if (ActiveMdiChild is IChildForm childForm)
+            {
+                ToolStripManager.Merge(childForm.ToolBarStrip, toolBar);
+            }
         }
 
         private void RefreshMenu()
         {
-            menuItemSave.Enabled =
-                menuItemClose.Enabled =
-                toolStripButtonSave.Enabled =
-                menuItemCopy.Enabled =
-                MdiChildren.Length > 0;
+            menuItemCascade.Enabled =
+                menuItemTileVert.Enabled =
+                menuItemTileHorz.Enabled =
+                menuItemArrangeIcons.Enabled =
+                menuItemCloseAll.Enabled =
+                ActiveMdiChild != null;
         }
 
         void UpdateDeviceList(IEnumerable<DeviceData> iEnumerable)
@@ -184,7 +189,6 @@ namespace ScrCap
                                 FormImage childForm = new FormImage();
                                 childForm.SetImage(image);
                                 childForm.MdiParent = this;
-                                childForm.FormClosed += ChildForm_FormClosed;
                                 childForm.Text = $"{deviceData.Name}-{DateTime.Now:yyyyMMdd-HHmmss}";
                                 childForm.Show();
                                 statusLabel.Text = String.Format("Image captured from {0} at {1}", deviceData.Name, DateTime.Now);
@@ -209,15 +213,6 @@ namespace ScrCap
                     this.Cursor = Cursors.Default;
                 }
             }
-        }
-
-        private void ChildForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (sender is Form)
-            {
-                ((Form)sender).FormClosed -= ChildForm_FormClosed;
-            }
-            timer.Change(100, Timeout.Infinite);
         }
 
         private async void menuItemCapture_Click(object sender, EventArgs e)
@@ -263,47 +258,10 @@ namespace ScrCap
             LayoutMdi(MdiLayout.ArrangeIcons);
         }
 
-        private void FormMain_MdiChildActivate(object sender, EventArgs e)
-        {
-            RefreshMenu();
-        }
-
-        private void menuItemSave_Click(object sender, EventArgs e)
-        {
-            if (MdiChildren.Length > 0)
-            {
-                (MdiChildren[0] as FormImage)?.SaveImage();
-            }
-        }
-
-        private void menuItemClose_Click(object sender, EventArgs e)
-        {
-            if (MdiChildren.Length > 0)
-            {
-                (MdiChildren[0] as Form)?.Close();
-            }
-        }
-
-        private void toolStripButtonSave_Click(object sender, EventArgs e)
-        {
-            if (MdiChildren.Length > 0)
-            {
-                (MdiChildren[0] as FormImage)?.SaveImage();
-            }
-        }
-
         private async void timerRefresh_Tick(object sender, EventArgs e)
         {
             if (adbClient != null)
                 UpdateDeviceList(await adbClient.GetDevicesAsync());
-        }
-
-        private void menuItemCopy_Click(object sender, EventArgs e)
-        {
-            if (MdiChildren.Length > 0)
-            {
-                (MdiChildren[0] as FormImage)?.CopyImageToClipboard();
-            }
         }
     }
 }
